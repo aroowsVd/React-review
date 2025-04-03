@@ -78,6 +78,11 @@ const Input = styled(motion.input)`
   font-size: 16px;
   background: transparent;
   border: 1px solid white;
+  border-radius: 5px;
+  ::placeholder {
+    color: rgba(255, 255, 255, 1) !important;
+    opacity: 1;
+  }
 `
 
 const logoVariants = {
