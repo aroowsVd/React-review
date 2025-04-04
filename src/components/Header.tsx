@@ -2,6 +2,8 @@ import styled from "styled-components"
 import { motion } from "framer-motion"
 import { Link, useMatch, useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
+import { useForm } from "react-hook-form"
+import { IForm } from "../types/formInterface"
 
 const Nav = styled.nav`
   width: 100%;
@@ -46,7 +48,7 @@ const Item = styled.li`
   flex-direction: column;
 `
 
-const Search = styled.span`
+const Search = styled.form`
   color: white;
   display: flex;
   align-items: center;
@@ -126,6 +128,11 @@ function Header() {
     }
   }, [])
 
+  const { register, handleSubmit } = useForm<IForm>();
+  const onValid = (data: IForm) => {
+    navigate(`/search?keyword=${data.keyword}`);
+  }
+
   return (
     <Nav onClick={closeSearch} style={{ background: bgColorName, transition: 'background 0.9s ease' }}>
       <Col>
@@ -157,7 +164,7 @@ function Header() {
         </Items>
       </Col>
       <Col>
-        <Search>
+        <Search onSubmit={handleSubmit(onValid)}>
           <motion.svg
             onClick={toggleSearch}
             transition={{ease: 'linear'}}
@@ -172,7 +179,13 @@ function Header() {
               clipRule="evenodd"
             ></path>
           </motion.svg>
-          <Input id="searchInput" animate={{scaleX: searchOpen ? 1 : 0}} transition={{ease: 'linear'}} placeholder="Search for movie or tv show..." />
+          <Input
+            {...register("keyword", {required: true, minLength: 2})}
+            id="searchInput" 
+            animate={{scaleX: searchOpen ? 1 : 0}} 
+            transition={{ease: 'linear'}} 
+            placeholder="Search for movie or tv show..." 
+          />
         </Search>
       </Col>
     </Nav>
